@@ -1,20 +1,3 @@
-/*            
-I	1	I
-V	5	V
-X	10	X
-L	50	L
-C	100	C
-D	500	D
-M	1,000	M
-I	1,000	_I
-V	5,000	_V
-X	10,000	_X
-L	50,000	_L
-C	100,000	_C
-D	500,000	_D
-M	1,000,000	_M
-*/
-
 /* 
 IV -> 'I' and 'V'
 I is 1
@@ -25,20 +8,40 @@ However we can't apply the same thing for roman numeric that after X -> return a
 Same error throw for when V is before one that bigger than it
 */
 
-// const { prompts } = require('inquirer');
-import inquirer from 'inquirer';
+import roman from './src/roman.js';
+import {menu, promptUser} from './src/prompt.js';
 
-async function userInput() {
-  const input = await inquirer.prompt({
-    type: 'input',
-    name: 'roman',
-    message: 'Enter your roman numeric to be converted',
-    default: 'IV',
-  })
-  return input.roman;
+const toInterger = async () => {
+  const input = await promptUser();
+  const inputArr = input.split('')
+  const convertionResult = inputArr.reduce((accumulator, currentValue, index, arr) => {
+    const current = roman[currentValue];
+    const next = roman[arr[index + 1]];
+    if (current < next) {
+      return accumulator += current*-1
+    }
+    return accumulator += current;
+  },0)
+  return {input, convertionResult};
+} 
+
+async function userChoices() {
+  const choice = await menu();
+  switch (choice) {
+    case 'Convert Roman to Interger':
+      const {input, convertionResult} = await toInterger();
+      console.log(`\n${input} is ${convertionResult}\n`);
+      userChoices();
+      break;
+  
+    default:
+      break;
+  }
 }
 
-const roman = await userInput();
+userChoices();
+
+
 
 
 

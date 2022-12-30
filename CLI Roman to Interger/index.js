@@ -12,7 +12,13 @@ import roman from './src/roman.js';
 import {menu, promptUser} from './src/prompt.js';
 
 const toInterger = async () => {
+  let pattern = /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/
   const input = await promptUser();
+  const validRoman = pattern.test(input);
+  if(!validRoman) {
+    console.log("Invalid Roman");
+    return toInterger();
+  }
   const inputArr = input.split('')
   const convertionResult = inputArr.reduce((accumulator, currentValue, index, arr) => {
     const current = roman[currentValue];
